@@ -8,23 +8,43 @@
       padding: 20px;
     }
     button {
-      padding: 10px 15px;
-      font-size: 16px;
+      padding: 8px 14px;
+      font-size: 15px;
+      margin-right: 10px;
       cursor: pointer;
     }
-    #result {
+    table {
       margin-top: 20px;
-      font-size: 18px;
-      font-weight: bold;
+      border-collapse: collapse;
+      width: 300px;
+    }
+    th, td {
+      border: 1px solid #333;
+      padding: 8px;
+      text-align: center;
+    }
+    th {
+      background-color: #f2f2f2;
     }
   </style>
 </head>
 <body>
 
   <h2>Random PV Generator</h2>
-  <button onclick="generatePV()">Generate Random PV</button>
 
-  <div id="result"></div>
+  <button onclick="generatePV()">Generate Random PV</button>
+  <button onclick="clearTable()">Clear PV Table</button>
+
+  <table>
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Generated PV</th>
+      </tr>
+    </thead>
+    <tbody id="pvTableBody">
+    </tbody>
+  </table>
 
   <script>
     const pvList = [
@@ -66,10 +86,29 @@
       "PV-26239"
     ];
 
+    let remainingPVs = [...pvList];
+    let count = 0;
+
     function generatePV() {
-      const randomIndex = Math.floor(Math.random() * pvList.length);
-      document.getElementById("result").innerText =
-        "Selected PV: " + pvList[randomIndex];
+      if (remainingPVs.length === 0) {
+        alert("All PVs have been generated. Please clear the table to start again.");
+        return;
+      }
+
+      const randomIndex = Math.floor(Math.random() * remainingPVs.length);
+      const selectedPV = remainingPVs.splice(randomIndex, 1)[0];
+      count++;
+
+      const tableBody = document.getElementById("pvTableBody");
+      const row = tableBody.insertRow();
+      row.insertCell(0).innerText = count;
+      row.insertCell(1).innerText = selectedPV;
+    }
+
+    function clearTable() {
+      document.getElementById("pvTableBody").innerHTML = "";
+      remainingPVs = [...pvList];
+      count = 0;
     }
   </script>
 
